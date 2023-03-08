@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">social-health</string>
+    <string name="title_activity_main">social-health</string>
+    <string name="package_name">com.socialhealth.app</string>
+    <string name="custom_url_scheme">com.socialhealth.app</string>
+</resources>
