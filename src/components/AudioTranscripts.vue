@@ -16,14 +16,15 @@
 
 <script>
 import { defineComponent } from "vue";
-import { useLocalStorage } from "@vueuse/core";
 import AudioPlayer from "./AudioPlayer.vue";
+
 export default defineComponent({
   components: { AudioPlayer },
-  data() {
-    return {
-      localAudio: useLocalStorage("localAudio", []),
-    };
+  props: {
+    localAudio: {
+      type: Array,
+      default: () => [],
+    },
   },
 });
 </script>

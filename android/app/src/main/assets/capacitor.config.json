@@ -1,0 +1,6 @@
+{
+	"appId": "com.socialhealth.app",
+	"appName": "social-health",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}

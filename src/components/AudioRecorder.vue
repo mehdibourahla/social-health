@@ -12,8 +12,9 @@
 
 <script>
 import { defineComponent } from "vue";
-import { useLocalStorage } from "@vueuse/core";
+import { Storage } from "@capacitor/storage";
 import axios from "axios";
+
 export default defineComponent({
   data() {
     return {
@@ -21,12 +22,12 @@ export default defineComponent({
       audioChunks: [],
       isRecording: false,
       audioUrl: null,
-      localAudio: useLocalStorage("localAudio", []),
+      localAudio: [],
     };
   },
-  mounted() {
-    const base64data = localStorage.getItem("audio");
-    this.audioUrl = base64data;
+  async mounted() {
+    const ret = await Storage.get({ key: "localAudio" });
+    this.localAudio = JSON.parse(ret.value) || [];
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.mediaRecorder = new MediaRecorder(stream);
@@ -48,6 +49,11 @@ export default defineComponent({
       const transcriptions = await this.whisper(blob);
       const chatGPT = await this.askGPT(transcriptions.text);
       this.localAudio.push({ audio: this.audioUrl, transcriptions, chatGPT });
+      await Storage.set({
+        key: "localAudio",
+        value: JSON.stringify(this.localAudio),
+      });
+      this.$emit("update-records");
     },
     toggleRecording() {
       if (this.isRecording) {
