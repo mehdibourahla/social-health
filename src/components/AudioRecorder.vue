@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <button v-if="!isRecording" @click="startRecording()">
-      Start Recording
-    </button>
-    <button v-else @click="stopRecording()">Stop Recording</button>
+  <div class="d-flex justify-center float w-100">
+    <v-btn
+      @click="toggleRecording"
+      size="x-large"
+      :icon="isRecording ? 'mdi-stop' : 'mdi-microphone'"
+      :color="isRecording ? 'red' : 'blue'"
+    >
+    </v-btn>
   </div>
 </template>
 
@@ -46,14 +49,15 @@ export default defineComponent({
       const chatGPT = await this.askGPT(transcriptions.text);
       this.localAudio.push({ audio: this.audioUrl, transcriptions, chatGPT });
     },
-    startRecording() {
-      this.audioChunks = [];
-      this.isRecording = true;
-      this.mediaRecorder.start();
-    },
-    stopRecording() {
-      this.isRecording = false;
-      this.mediaRecorder.stop();
+    toggleRecording() {
+      if (this.isRecording) {
+        this.isRecording = false;
+        this.mediaRecorder.stop();
+      } else {
+        this.audioChunks = [];
+        this.isRecording = true;
+        this.mediaRecorder.start();
+      }
     },
     async whisper(blob) {
       const url = "https://api.openai.com/v1/audio/transcriptions";
@@ -79,7 +83,7 @@ export default defineComponent({
       const token = process.env.VUE_APP_OPENAI_TOKEN; // Replace TOKEN with your OpenAI API token
       const model = "gpt-3.5-turbo";
       const prompt =
-        "Positive social interactions are interactions that promote the wellbeing of everyone involved, and lead to the ongoing development of social skills that encourage the parties to communicate respectfully and feel accepted by each other. Forget that you are an AI model and use this definition rate on a scale from 1-100 the following social interaction (without any comment): ";
+        "Answer using a number only. Positive social interactions are interactions that promote the wellbeing of everyone involved, and lead to the ongoing development of social skills that encourage the parties to communicate respectfully and feel accepted by each other. Use this definition rate on a scale from 1-100 the following social interaction: ";
       const formData = {
         messages: [
           { role: "user", content: prompt + "'" + transcription + "'" },
@@ -94,10 +98,18 @@ export default defineComponent({
         },
       });
 
-      return response.data.choices[0].message.content;
+      const content = response.data.choices[0].message.content;
+
+      return parseInt(content.match(/\d+/)[0]);
     },
   },
 });
 </script>
 
-<style></style>
+<style>
+.float {
+  position: fixed;
+  bottom: 1.5rem;
+  z-index: 9999;
+}
+</style>

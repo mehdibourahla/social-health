@@ -1,7 +1,7 @@
 <template>
   <div>
+    <audio-transcripts class="mb-12"></audio-transcripts>
     <audio-recorder> </audio-recorder>
-    <audio-transcripts></audio-transcripts>
   </div>
 </template>
 
