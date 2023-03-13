@@ -37,7 +37,7 @@ export default defineComponent({
           name: "Chat GPT",
           color: "#457B9D",
           icon: "mdi-robot",
-          redirection: "",
+          redirection: "Chat",
         },
         {
           name: "Social Health",

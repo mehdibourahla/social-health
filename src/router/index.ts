@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import MainView from "../views/MainView.vue";
 import SocialHealthView from "../views/SocialHealthView.vue";
+import ChatView from "../views/ChatView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/social-health",
     name: "SocialHealth",
     component: SocialHealthView,
+  },
+  {
+    path: "/chat",
+    name: "Chat",
+    component: ChatView,
   },
 ];
 
