@@ -1,39 +1,60 @@
 <template>
   <div>
-    <audio-transcripts
-      :localAudio="localAudio"
-      class="mb-12"
-    ></audio-transcripts>
-
-    <audio-recorder @update-records="refresh()"> </audio-recorder>
+    <v-container class="pa-6">
+      <v-row>
+        <v-col
+          v-for="menu in menus"
+          :key="menu.name"
+          class="text-center my-2"
+          cols="4"
+        >
+          <v-card
+            class="home-tile rounded-lg"
+            :to="{ name: menu.redirection }"
+            :color="menu.color"
+          >
+            <v-icon size="64" color="white">
+              {{ menu.icon }}
+            </v-icon>
+          </v-card>
+          <div class="text-caption font-weight-bold pt-2">
+            {{ menu.name }}
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
-import AudioRecorder from "@/components/AudioRecorder.vue";
-import AudioTranscripts from "@/components/AudioTranscripts.vue";
 import { defineComponent } from "vue";
-import { Storage } from "@capacitor/storage";
 
 export default defineComponent({
-  components: { AudioRecorder, AudioTranscripts },
-  name: "MainView",
-
   data() {
     return {
-      localAudio: [],
+      menus: [
+        {
+          name: "Chat GPT",
+          color: "#457B9D",
+          icon: "mdi-robot",
+          redirection: "",
+        },
+        {
+          name: "Social Health",
+          color: "#CB6584",
+          icon: "mdi-account-child-circle",
+          redirection: "SocialHealth",
+        },
+      ],
     };
-  },
-
-  async mounted() {
-    await this.refresh();
-  },
-
-  methods: {
-    async refresh() {
-      const ret = await Storage.get({ key: "localAudio" });
-      this.localAudio = JSON.parse(ret.value).reverse();
-    },
   },
 });
 </script>
+
+<style lang="scss">
+.home-tile {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+</style>
