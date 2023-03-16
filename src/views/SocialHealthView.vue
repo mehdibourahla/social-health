@@ -3,9 +3,10 @@
     <audio-transcripts
       :localAudio="localAudio"
       class="mb-12"
+      @delete-transcript="deleteTranscript"
     ></audio-transcripts>
 
-    <audio-recorder @update-records="refresh()"> </audio-recorder>
+    <audio-recorder @update-records="addTranscript"> </audio-recorder>
   </div>
 </template>
 
@@ -30,9 +31,26 @@ export default defineComponent({
   },
 
   methods: {
+    async deleteTranscript(id) {
+      this.localAudio = this.localAudio.filter((audio) => audio.id != id);
+      await Storage.set({
+        key: "localAudio",
+        value: JSON.stringify(this.localAudio),
+      });
+    },
+    async addTranscript(transcript) {
+      this.localAudio.unshift(transcript);
+      await Storage.set({
+        key: "localAudio",
+        value: JSON.stringify(this.localAudio),
+      });
+    },
     async refresh() {
       const ret = await Storage.get({ key: "localAudio" });
-      this.localAudio = JSON.parse(ret.value).reverse();
+      this.localAudio = JSON.parse(ret.value) || [];
+      if (this.localAudio.length > 0) {
+        this.localAudio.sort((a, b) => b.id - a.id);
+      }
     },
   },
 });

@@ -1,6 +1,8 @@
 <template>
   <div class="d-flex justify-center float w-100">
     <v-btn
+      :loading="loading > 0"
+      :disabled="loading > 0"
       @click="toggleRecording"
       size="x-large"
       :icon="isRecording ? 'mdi-stop' : 'mdi-microphone'"
@@ -12,23 +14,19 @@
 
 <script>
 import { defineComponent } from "vue";
-import { Storage } from "@capacitor/storage";
 import axios from "axios";
 
 export default defineComponent({
   data() {
     return {
+      loading: 0,
       mediaRecorder: null,
       audioChunks: [],
       isRecording: false,
       audioUrl: null,
-      localAudio: [],
     };
   },
   async mounted() {
-    const ret = await Storage.get({ key: "localAudio" });
-    this.localAudio = JSON.parse(ret.value) || [];
-
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.mediaRecorder = new MediaRecorder(stream);
 
@@ -45,15 +43,16 @@ export default defineComponent({
   },
   methods: {
     async saveAudio(blob) {
+      this.loading++;
       this.audioUrl = URL.createObjectURL(blob);
       const transcriptions = await this.whisper(blob);
       const chatGPT = await this.askGPT(transcriptions.text);
-      this.localAudio.push({ audio: this.audioUrl, transcriptions, chatGPT });
-      await Storage.set({
-        key: "localAudio",
-        value: JSON.stringify(this.localAudio),
+      this.$emit("update-records", {
+        id: Date.now(),
+        transcriptions,
+        chatGPT,
       });
-      this.$emit("update-records");
+      this.loading--;
     },
     toggleRecording() {
       if (this.isRecording) {
