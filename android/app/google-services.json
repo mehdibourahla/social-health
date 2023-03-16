@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "576676443057",
+    "project_id": "social-health-v1",
+    "storage_bucket": "social-health-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576676443057:android:0bf04b6551d92090854390",
+        "android_client_info": {
+          "package_name": "com.socialhealth.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576676443057-6lqa3804fjl084sps2vt70vj3210u9qp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgLWz9ZHodj3Is0_8UIDMGGbp9-xkO5Tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576676443057-6lqa3804fjl084sps2vt70vj3210u9qp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
