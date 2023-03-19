@@ -36,6 +36,13 @@ export default defineComponent({
     return {
       menus: [
         {
+          name: "YAMNet",
+          color: "#457B9D",
+          icon: "mdi-headphones",
+          redirection: "Yamnet",
+          status: true,
+        },
+        {
           name: "Chat GPT",
           color: "#457B9D",
           icon: "mdi-robot",

@@ -39,7 +39,7 @@ export default defineComponent({
       });
 
       this.mediaRecorder.addEventListener("stop", () => {
-        const audioBlob = new Blob(this.audioChunks, { type: "audio/ogg" });
+        const audioBlob = new Blob(this.audioChunks, { type: "audio/wav" });
         this.saveAudio(audioBlob);
       });
     });

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import MainView from "../views/MainView.vue";
 import SocialHealthView from "../views/SocialHealthView.vue";
 import ChatView from "../views/ChatView.vue";
+import YamnetView from "../views/YamnetView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/chat",
     name: "Chat",
     component: ChatView,
+  },
+  {
+    path: "/yamnet",
+    name: "Yamnet",
+    component: YamnetView,
   },
 ];
 

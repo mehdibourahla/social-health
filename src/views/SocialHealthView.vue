@@ -37,7 +37,7 @@ export default defineComponent({
     async deleteTranscript(id) {
       this.localAudio = this.localAudio.filter((audio) => audio.id != id);
       await Storage.set({
-        key: "localAudio",
+        key: "SocialHealth",
         value: JSON.stringify(this.localAudio),
       });
     },
@@ -53,13 +53,13 @@ export default defineComponent({
       });
 
       await Storage.set({
-        key: "localAudio",
+        key: "SocialHealth",
         value: JSON.stringify(this.localAudio),
       });
       this.loading = false;
     },
     async refresh() {
-      const ret = await Storage.get({ key: "localAudio" });
+      const ret = await Storage.get({ key: "SocialHealth" });
       this.localAudio = JSON.parse(ret.value) || [];
       if (this.localAudio.length > 0) {
         this.localAudio.sort((a, b) => b.id - a.id);
