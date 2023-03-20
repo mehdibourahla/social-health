@@ -13,6 +13,7 @@ import { Storage } from "@capacitor/storage";
 import axios from "axios";
 import * as d3 from "d3";
 import d3Cloud from "d3-cloud";
+import { useDisplay } from "vuetify";
 
 export default defineComponent({
   components: { AudioRecorder },
@@ -24,19 +25,24 @@ export default defineComponent({
       localAudio: [],
       words: [],
       layout: null,
+      width: 800,
+      height: 600,
     };
   },
 
   async mounted() {
+    const { width, height } = useDisplay();
+    this.width = width;
+    this.height = height;
     await this.refresh();
     const svg = d3
       .select("#word-cloud")
       .append("svg")
-      .attr("viewBox", [0, 0, 640, 400])
-      .attr("width", 640)
+      .attr("viewBox", [0, 0, width.value, height.value])
+      .attr("width", width.value)
+      .attr("height", height.value)
       .attr("font-family", "sans-serif")
-      .attr("text-anchor", "middle")
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+      .attr("text-anchor", "middle");
 
     this.layout = svg.append("g").attr("transform", `translate(${0},${0})`);
   },
@@ -80,6 +86,7 @@ export default defineComponent({
       const url = "http://127.0.0.1:5000/classify";
       let formData = new FormData();
       formData.append("audio_data", audio, "audio.wav");
+      formData.append("k", 20);
       const response = await axios.post(url, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -92,12 +99,12 @@ export default defineComponent({
       const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
       this.layout.selectAll("*").remove();
       const cloud = d3Cloud()
-        .size([640, 400])
+        .size([this.width, this.height])
         .words(words.map((d) => ({ text: d.class, size: d.prob * 100 })))
         .padding(0)
         .rotate(0)
         .font("sans-serif")
-        .fontSize((d) => Math.sqrt(d.size) * 48)
+        .fontSize((d) => Math.max(Math.sqrt(d.size) * 10, 18))
         .on("word", ({ size, x, y, rotate, text }) => {
           this.layout
             .append("text")
@@ -110,23 +117,6 @@ export default defineComponent({
         });
 
       cloud.start();
-    },
-    drawWordCloud(words) {
-      d3.select("#word-cloud")
-        .append("svg")
-        .attr("width", 500)
-        .attr("height", 500)
-        .append("g")
-        .attr("transform", "translate(250,250)")
-        .selectAll("text")
-        .data(words)
-        .enter()
-        .append("text")
-        .style("font-size", (d) => `${d.size}px`)
-        .style("fill", (d) => d3.schemeCategory10[d.size % 10])
-        .attr("text-anchor", "middle")
-        .attr("transform", (d) => `translate(${[d.x, d.y]})`)
-        .text((d) => d.text);
     },
   },
 });
