@@ -40,7 +40,7 @@ export default defineComponent({
           color: "#457B9D",
           icon: "mdi-headphones",
           redirection: "Yamnet",
-          status: true,
+          status: false,
         },
         {
           name: "Chat GPT",
